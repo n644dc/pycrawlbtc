@@ -1,6 +1,8 @@
 import html.parser
 import urllib.request
 import urllib.parse
+import random
+import os
 
 
 class LinkParser(html.parser.HTMLParser):
@@ -60,11 +62,29 @@ class LinkParser(html.parser.HTMLParser):
             return "", [], False
 
 
-def spider(seed):
+def spider():
     parser = LinkParser()
-    numberChecked = 0
+    maximumCheck = 0
 
-    parser.getPage('http://washen.me/800')
+    while maximumCheck < 1000000:
+        seed = random.getrandbits(64)
+        print(seed)
+        pageNumber = seed
 
-    for acct in parser.accounts:
-        print(acct)
+        if not os.path.exists("C:\\Users\\n644d\\code\\accts\\{}".format(seed)):
+            os.makedirs("C:\\Users\\n644d\\code\\accts\\{}".format(seed))
+
+        while pageNumber >= seed:
+            parser.getPage("http://washen.me/{}".format(seed))
+
+            with open("C:\\Users\\n644d\\code\\accts\\{}\\{}.txt".format(seed, pageNumber), "w") as savFile:
+                for acct in parser.accounts:
+                    savFile.write("{}, {}, {}\n".format(acct[0], acct[1][0], acct[1][1]))
+            print('Page #{} saved!'.format(pageNumber))
+            pageNumber = pageNumber + 1
+            maximumCheck = maximumCheck + 1
+            if pageNumber == (seed + 1000):
+                break
+
+
+

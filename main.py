@@ -2,7 +2,7 @@ import pageParser
 
 
 def main():
-    pageParser.spider(80)
+    pageParser.spider()
 
 
 if __name__ == '__main__':
