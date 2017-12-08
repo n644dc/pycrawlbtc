@@ -71,14 +71,18 @@ for acctDir in acctDirectories:
                     numberOfAccounts = numberOfAccounts + 1
                     checkBalance(acctData, numberOfAccounts)
 
+    if len(goldList) > 0:
+        with open("C:\\Users\\n644d\\code\\accts\\{}.gold.txt", "w".format(seed)) as f:
+            for gold in goldList:
+                f.write("{}\n".format(gold))
+        goldList = []
+
+    if len(watchList) > 0:
+        with open("C:\\Users\\n644d\\code\\accts\\{}.watch.txt", "w".format(seed)) as f:
+            for watch in watchList:
+                f.write("{}\n".format(watch))
+        watchList = []
+
 seed = random.getrandbits(128)
 
-if len(goldList) > 0:
-    with open("C:\\Users\\n644d\\code\\accts\\{}.gold.txt", "w".format(seed)) as f:
-        for gold in goldList:
-            f.write("{}\n".format(gold))
 
-if len(watchList) > 0:
-    with open("C:\\Users\\n644d\\code\\accts\\{}.watch.txt", "w".format(seed)) as f:
-        for watch in watchList:
-            f.write("{}\n".format(watch))
