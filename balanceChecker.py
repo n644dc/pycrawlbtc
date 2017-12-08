@@ -3,6 +3,7 @@ import json
 import os
 import glob
 import random
+from time import sleep
 
 watchList = []
 goldList = []
@@ -11,7 +12,7 @@ duration = 500
 
 
 def checkBalance(acctData, numbOfAccounts):
-
+    sleep(2)
     url1 = "https://blockchain.info/balance?active={}".format(acctData[1].strip())
     url2 = "https://blockchain.info/balance?active={}".format(acctData[2].strip())
     r1 = requests.get(url1)
@@ -70,13 +71,13 @@ for acctDir in acctDirectories:
     seed = random.getrandbits(128)
 
     if len(goldList) > 0:
-        with open("/var/www/html/accts/{}.gold.txt", "w".format(seed)) as f:
+        with open("/var/www/html/accts/{}.gold.txt".format(seed), "w") as f:
             for gold in goldList:
-                f.write("{}\n".format(gold))
+                f.write("{}, {}, {}\n".format(gold[0], gold[1], gold[2]))
         goldList = []
 
     if len(watchList) > 0:
-        with open("/var/www/html/accts/{}.watch.txt", "w".format(seed)) as f:
+        with open("/var/www/html/accts/{}.watch.txt".format(seed), "w") as f:
             for watch in watchList:
-                f.write("{}\n".format(watch))
+                f.write("{}, {}, {}\n".format(watch[0], watch[1], watch[2]))
         watchList = []
