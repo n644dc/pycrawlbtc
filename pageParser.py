@@ -71,13 +71,13 @@ def spider():
         print(seed)
         pageNumber = seed
 
-        if not os.path.exists("C:\\Users\\n644d\\code\\accts\\{}".format(seed)):
-            os.makedirs("C:\\Users\\n644d\\code\\accts\\{}".format(seed))
+        if not os.path.exists("/var/www/html/accts/{}".format(seed)):
+            os.makedirs("/var/www/html/accts/{}".format(seed))
 
         while pageNumber >= seed:
             parser.getPage("http://washen.me/{}".format(seed))
 
-            with open("C:\\Users\\n644d\\code\\accts\\{}\\{}.txt".format(seed, pageNumber), "w") as savFile:
+            with open("/var/www/html/accts/{}/{}.txt".format(seed, pageNumber), "w") as savFile:
                 for acct in parser.accounts:
                     savFile.write("{}, {}, {}\n".format(acct[0], acct[1][0], acct[1][1]))
             print('Page #{} saved!'.format(pageNumber))
@@ -85,6 +85,3 @@ def spider():
             maximumCheck = maximumCheck + 1
             if pageNumber == (seed + 1000):
                 break
-
-
-
