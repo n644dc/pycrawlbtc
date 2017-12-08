@@ -35,7 +35,7 @@ def checkBalance(acctData, numbOfAccounts):
         final2 = acctCheck2['final_balance']
         tot2 = acctCheck2['total_received']
 
-    print("{} {} {} {} -- {}".format(final1, tot1, final2, tot2, numbOfAccounts))
+    print("{} {} {} {} -- {}".format(final1, final2, tot1, tot2, numbOfAccounts))
 
     if final1 > 0 or final2 > 0:
         print("GOT ONE!!!!!!!!!!!!!!!1")
@@ -53,8 +53,6 @@ def checkBalance(acctData, numbOfAccounts):
         print(acctData)
         print("*"*50)
         watchList.append(acctData)
-        winsound.Beep(frequency, duration)
-        winsound.Beep(frequency, duration)
         winsound.Beep(frequency, duration)
 
 
