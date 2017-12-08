@@ -3,7 +3,6 @@ import json
 import os
 import glob
 import random
-import winsound
 
 watchList = []
 goldList = []
@@ -22,16 +21,17 @@ def checkBalance(acctData, numbOfAccounts):
     tot1 = 0
     tot2 = 0
 
+
     if r1.status_code is not 200 or r2.status_code is not 200:
         print("cant look up bal, blockchain api issue")
 
     if r1.status_code == 200:
-        acctCheck1 = json.loads(r1.content)[acctData[1].strip()]
+        acctCheck1 = json.loads(r1.content.decode('utf-8'))[acctData[1].strip()]
         final1 = acctCheck1['final_balance']
         tot1 = acctCheck1['total_received']
 
     if r2.status_code == 200:
-        acctCheck2 = json.loads(r2.content)[acctData[2].strip()]
+        acctCheck2 = json.loads(r2.content.decode('utf-8'))[acctData[2].strip()]
         final2 = acctCheck2['final_balance']
         tot2 = acctCheck2['total_received']
 
@@ -43,9 +43,6 @@ def checkBalance(acctData, numbOfAccounts):
         print(acctData)
         print("*"*100)
         goldList.append(acctData)
-        winsound.Beep(frequency, duration)
-        winsound.Beep(frequency, duration)
-        winsound.Beep(frequency, duration)
 
     if tot1 > 0 or tot2 > 0:
         print("WATCH OUT!!!!!!!!!!!!!!")
@@ -53,14 +50,13 @@ def checkBalance(acctData, numbOfAccounts):
         print(acctData)
         print("*"*50)
         watchList.append(acctData)
-        winsound.Beep(frequency, duration)
 
 
-directory = "C:\\Users\\n644d\\code\\accts"
+directory = "/var/www/html/accts"
 acctDirectories = [x[0] for x in os.walk(directory)]
 numberOfAccounts = 0
 for acctDir in acctDirectories:
-    acctFiles = glob.glob("{}\\*.txt".format(acctDir))
+    acctFiles = glob.glob("{}/*.txt".format(acctDir))
     if len(acctFiles) > 0:
         for acctFile in acctFiles:
             accts = []
@@ -71,18 +67,16 @@ for acctDir in acctDirectories:
                     numberOfAccounts = numberOfAccounts + 1
                     checkBalance(acctData, numberOfAccounts)
 
+    seed = random.getrandbits(128)
+
     if len(goldList) > 0:
-        with open("C:\\Users\\n644d\\code\\accts\\{}.gold.txt", "w".format(seed)) as f:
+        with open("/var/www/html/accts/{}.gold.txt", "w".format(seed)) as f:
             for gold in goldList:
                 f.write("{}\n".format(gold))
         goldList = []
 
     if len(watchList) > 0:
-        with open("C:\\Users\\n644d\\code\\accts\\{}.watch.txt", "w".format(seed)) as f:
+        with open("/var/www/html/accts/{}.watch.txt", "w".format(seed)) as f:
             for watch in watchList:
                 f.write("{}\n".format(watch))
         watchList = []
-
-seed = random.getrandbits(128)
-
-
