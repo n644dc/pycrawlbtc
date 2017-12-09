@@ -19,8 +19,8 @@ class PassGen:
         if not os.path.exists(self.workDir):
             os.makedirs(self.workDir)
 
-        if not os.path.exists(self.workDir):
-            os.makedirs(self.workDir)
+        if not os.path.exists(self.phraseLocation):
+            os.makedirs(self.phraseLocation)
 
 
         # read in list

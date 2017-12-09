@@ -3,6 +3,7 @@ import urllib.request
 import urllib.parse
 import random
 import os
+import sys
 
 
 class LinkParser(html.parser.HTMLParser):
@@ -68,19 +69,33 @@ class LinkParser(html.parser.HTMLParser):
 def spider():
     parser = LinkParser()
     maximumCheck = 0
+    isLinux = sys.platform.lower().startswith('linux')
+
+    workDir = '/var/www/html/bitcon' if isLinux else 'C:\\bitcon'
+    acctDir = "{}/accts/".format(workDir) if isLinux else "{}\\accts\\".format(workDir)
+
+    if not os.path.exists(workDir):
+        os.makedirs(workDir)
+
+    if not os.path.exists(acctDir):
+        os.makedirs(acctDir)
 
     while maximumCheck < 1000000:
         seed = random.getrandbits(64)
         print(seed)
         pageNumber = seed
 
-        if not os.path.exists("/var/www/html/accts/{}".format(seed)):
-            os.makedirs("/var/www/html/accts/{}".format(seed))
+        randDir = "{}{}".format(acctDir, seed)
+
+        if not os.path.exists(randDir):
+            os.makedirs(randDir)
 
         while pageNumber >= seed:
             parser.getPage("http://washen.me/{}".format(seed))
 
-            with open("/var/www/html/accts/{}/{}.txt".format(seed, pageNumber), "w") as savFile:
+            randFile = "{}/{}.txt".format(randDir, pageNumber) if isLinux else "{}\\{}.txt".format(randDir, pageNumber)
+
+            with open(randFile, "w") as savFile:
                 for acct in parser.accounts:
                     savFile.write("{}, {}, {}\n".format(acct[0], acct[1][0], acct[1][1]))
             print('Page #{} saved!'.format(pageNumber))
