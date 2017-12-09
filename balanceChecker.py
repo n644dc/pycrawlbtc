@@ -1,5 +1,6 @@
 import requests
 import json
+import sys
 import os
 import glob
 import random
@@ -7,8 +8,7 @@ from time import sleep
 
 watchList = []
 goldList = []
-frequency = 2500
-duration = 500
+isLinux = sys.platform.lower().startswith('linux')
 
 
 def checkBalance(acctData, numbOfAccounts):
@@ -21,7 +21,6 @@ def checkBalance(acctData, numbOfAccounts):
     final2 = 0
     tot1 = 0
     tot2 = 0
-
 
     if r1.status_code is not 200 or r2.status_code is not 200:
         print("cant look up bal, blockchain api issue")
@@ -53,31 +52,38 @@ def checkBalance(acctData, numbOfAccounts):
         watchList.append(acctData)
 
 
-directory = "/var/www/html/accts"
-acctDirectories = [x[0] for x in os.walk(directory)]
-numberOfAccounts = 0
-for acctDir in acctDirectories:
-    acctFiles = glob.glob("{}/*.txt".format(acctDir))
-    if len(acctFiles) > 0:
-        for acctFile in acctFiles:
-            accts = []
-            with open(acctFile) as f:
-                accts = f.read().splitlines()
-                for acct in accts:
-                    acctData = acct.split(',')
-                    numberOfAccounts = numberOfAccounts + 1
-                    checkBalance(acctData, numberOfAccounts)
+workDir = '/var/www/html/bitcon' if isLinux else 'C:\\bitcon'
+directory = "{}/accts/".format(workDir) if isLinux else "{}\\accts\\".format(workDir)
 
-    seed = random.getrandbits(128)
+if os.path.exists(directory):
+    acctDirectories = [x[0] for x in os.walk(directory)]
+    numberOfAccounts = 0
+    for acctDir in acctDirectories:
+        textFile = "{}/*.txt".format(acctDir) if isLinux else "{}\\*.txt".format(acctDir)
+        acctFiles = glob.glob(textFile)
+        if len(acctFiles) > 0:
+            for acctFile in acctFiles:
+                accts = []
+                with open(acctFile) as f:
+                    accts = f.read().splitlines()
+                    for acct in accts:
+                        acctData = acct.split(',')
+                        numberOfAccounts = numberOfAccounts + 1
+                        checkBalance(acctData, numberOfAccounts)
 
-    if len(goldList) > 0:
-        with open("/var/www/html/accts/{}.gold.txt".format(seed), "w") as f:
-            for gold in goldList:
-                f.write("{}, {}, {}\n".format(gold[0], gold[1], gold[2]))
-        goldList = []
+        seed = random.getrandbits(128)
 
-    if len(watchList) > 0:
-        with open("/var/www/html/accts/{}.watch.txt".format(seed), "w") as f:
-            for watch in watchList:
-                f.write("{}, {}, {}\n".format(watch[0], watch[1], watch[2]))
-        watchList = []
+        if len(goldList) > 0:
+            with open("{}{}.gold.txt".format(directory, seed), "w") as f:
+                for gold in goldList:
+                    f.write("{}, {}, {}\n".format(gold[0], gold[1], gold[2]))
+            goldList = []
+
+        if len(watchList) > 0:
+            with open("{}{}.watch.txt".format(directory, seed), "w") as f:
+                for watch in watchList:
+                    f.write("{}, {}, {}\n".format(watch[0], watch[1], watch[2]))
+            watchList = []
+else:
+    print("Nothing to do! Exiting...")
+    exit()
