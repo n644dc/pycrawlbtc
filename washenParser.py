@@ -60,10 +60,10 @@ class LinkParser(html.parser.HTMLParser):
                 self.feed(htmlString)
                 return htmlString.lower()
             else:
-                return "", [], False
+                return ""
         except Exception as e:
             print(e)
-            return "", [], False
+            return ""
 
 
 def spider():
@@ -95,14 +95,15 @@ def spider():
 
             randFile = "{}/{}.txt".format(randDir, pageNumber) if isLinux else "{}\\{}.txt".format(randDir, pageNumber)
 
-            with open(randFile, "w") as savFile:
-                for acct in parser.accounts:
-                    savFile.write("{}, {}, {}\n".format(acct[0], acct[1][0], acct[1][1]))
-            print('Page #{} saved!'.format(pageNumber))
-            pageNumber = pageNumber + 1
-            maximumCheck = maximumCheck + 1
-            if pageNumber == (seed + 1000):
-                break
+            if len(parser.accounts) > 0:
+                with open(randFile, "w") as savFile:
+                    for acct in parser.accounts:
+                        savFile.write("{}, {}, {}\n".format(acct[0], acct[1][0], acct[1][1]))
+                print('Page #{} saved!'.format(pageNumber))
+                pageNumber = pageNumber + 1
+                maximumCheck = maximumCheck + 1
+                if pageNumber == (seed + 1000):
+                    break
 
 
 def main():
