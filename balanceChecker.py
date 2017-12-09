@@ -35,20 +35,24 @@ def checkBalance(acctData, numbOfAccounts):
         final2 = acctCheck2['final_balance']
         tot2 = acctCheck2['total_received']
 
-    print("{} {} {} {} -- {}".format(final1, final2, tot1, tot2, numbOfAccounts))
-
     if final1 > 0 or final2 > 0:
+        print()
+        print("*!*"*100)
         print("GOT ONE!!!!!!!!!!!!!!!1")
-        print("*"*100)
         print(acctData)
-        print("*"*100)
+        print("{} {} {} {} -- {}".format(final1, final2, tot1, tot2, numbOfAccounts))
+        print("*!*"*100)
+        print()
         goldList.append(acctData)
 
     if tot1 > 0 or tot2 > 0:
-        print("WATCH OUT!!!!!!!!!!!!!!")
+        print()
         print("*"*50)
+        print("WATCH OUT!!!!!")
         print(acctData)
+        print("{} {} {} {} -- {}".format(final1, final2, tot1, tot2, numbOfAccounts))
         print("*"*50)
+        print()
         watchList.append(acctData)
 
 

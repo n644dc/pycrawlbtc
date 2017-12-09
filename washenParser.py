@@ -6,6 +6,9 @@ import os
 
 
 class LinkParser(html.parser.HTMLParser):
+    def error(self, message):
+        pass
+
     def __init__(self):
         self.currentPK = ''
         self.currentAddress = []
@@ -85,3 +88,11 @@ def spider():
             maximumCheck = maximumCheck + 1
             if pageNumber == (seed + 1000):
                 break
+
+
+def main():
+    spider()
+
+
+if __name__ == '__main__':
+    main()
